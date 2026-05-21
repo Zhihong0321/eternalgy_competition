@@ -389,7 +389,11 @@
           <input type="file" accept="application/pdf" id="fileIn" name="pdf" required />
         </label>
       </div>
-      <label class="agree"><input type="checkbox" required /><span>我确认所提交的作品为原创，并同意 Eternalgy 在比赛宣传中使用我的作品。<br><span style="opacity:.6">I confirm this submission is my original work.</span></span></label>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-top:6px;">
+        <label class="agree"><input type="checkbox" name="agree_tnc" required /><span>我已阅读并同意本比赛的<strong>条款与细则 (T&C)</strong>，包括评审团保留所有最终决定权。<br><span style="opacity:.6">I have read and agree to the Terms & Conditions. The judging panel reserves all rights to final decisions.</span></span></label>
+        <label class="agree"><input type="checkbox" name="agree_original" required /><span>我确认此作品为<strong>本人亲自设计</strong>，非他人作品或外包予自由职业者完成。允许使用 AI 工具辅助设计。<br><span style="opacity:.6">I confirm this is my own work, not outsourced to others. Use of AI tools is permitted.</span></span></label>
+        <label class="agree"><input type="checkbox" name="agree_location" required /><span>如被录取，我<strong>能够在 Taman Mount Austin, Johor Bahru</strong> 工作。<br><span style="opacity:.6">If selected, I am able to work at Taman Mount Austin, Johor Bahru.</span></span></label>
+      </div>
       <button type="submit" class="submit-btn" id="submitBtn">提交参赛作品 · Submit entry <span class="arr">→</span></button>
     </form>
   </section>

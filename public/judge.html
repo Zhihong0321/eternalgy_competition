@@ -128,6 +128,7 @@ function render(){
           <span class="tag status-${s.status}">${s.status.toUpperCase()}</span>
           <span class="tag">${esc(s.experience || 'N/A')}</span>
           <span class="tag">${sizeMB} MB</span>
+          ${s.agreements ? '<span class="tag" style="border-color:#27ae60;color:#27ae60;">✓ T&C</span><span class="tag" style="border-color:#27ae60;color:#27ae60;">✓ Original</span><span class="tag" style="border-color:#27ae60;color:#27ae60;">✓ Can relocate</span>' : ''}
           ${s.portfolio ? `<a class="tag" href="${esc(s.portfolio)}" target="_blank" style="text-decoration:none;color:var(--gold-deep);">Portfolio ↗</a>` : ''}
         </div>
       </div>

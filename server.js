@@ -87,10 +87,14 @@ app.post('/api/submit', (req, res, next) => {
   next();
 }, upload.single('pdf'), (req, res) => {
   try {
-    const { name, email, phone, portfolio, experience, concept } = req.body;
+    const { name, email, phone, portfolio, experience, concept, agree_tnc, agree_original, agree_location } = req.body;
 
     if (!name || !email || !phone || !req.file) {
       return res.status(400).json({ error: 'Missing required fields (name, email, phone, pdf)' });
+    }
+
+    if (!agree_tnc || !agree_original || !agree_location) {
+      return res.status(400).json({ error: 'You must agree to all terms before submitting.' });
     }
 
     const submission = {
@@ -101,6 +105,11 @@ app.post('/api/submit', (req, res, next) => {
       portfolio: portfolio || '',
       experience: experience || '',
       concept: concept || '',
+      agreements: {
+        tnc: true,
+        originalWork: true,
+        canWorkAtLocation: true
+      },
       filename: req.file.originalname,
       filesize: req.file.size,
       storedAs: req.file.filename,
