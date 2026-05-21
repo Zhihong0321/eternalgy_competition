@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Judge Panel · Eternalgy Design Competition 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#0E1A2B; --paper:#F4EFE6; --bone:#FBF8F1; --gold:#F2B23E; --gold-deep:#D89320; --mono:'JetBrains Mono',monospace; --display:'Space Grotesk','Noto Sans SC',sans-serif; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{ font-family:var(--display); background:var(--paper); color:var(--ink); min-height:100vh; }
+
+  .topbar{ display:flex; align-items:center; justify-content:space-between; padding:16px 24px; background:var(--ink); color:var(--paper); position:sticky; top:0; z-index:10; }
+  .topbar .left{ display:flex; align-items:center; gap:14px; }
+  .topbar img{ height:20px; filter:brightness(0) invert(1); }
+  .topbar h1{ font-size:15px; font-weight:600; letter-spacing:-.01em; }
+  .topbar .badge{ font-family:var(--mono); font-size:10px; background:var(--gold); color:var(--ink); padding:3px 8px; border-radius:999px; font-weight:600; }
+  .topbar .logout{ background:transparent; border:1px solid rgba(255,255,255,.3); color:var(--paper); padding:6px 14px; font:inherit; font-size:12px; cursor:pointer; border-radius:999px; }
+  .topbar .logout:hover{ border-color:var(--gold); color:var(--gold); }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="left">
+    <img src="/assets/eternalgy-logo-light.png" alt="Eternalgy"/>
+    <h1>Judge Panel</h1>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <span class="badge" id="count">—</span>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<style>
+  .stats{ display:flex; gap:0; border-bottom:1px solid rgba(14,26,43,.1); }
+  .stat{ flex:1; padding:20px 24px; border-right:1px solid rgba(14,26,43,.1); }
+  .stat:last-child{ border-right:none; }
+  .stat .n{ font-size:28px; font-weight:700; letter-spacing:-.02em; }
+  .stat .l{ font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; opacity:.5; margin-top:4px; }
+
+  .filters{ padding:16px 24px; display:flex; gap:8px; border-bottom:1px solid rgba(14,26,43,.1); flex-wrap:wrap; }
+  .filters button{ padding:6px 14px; border:1.5px solid var(--ink); background:transparent; font:inherit; font-size:12px; font-weight:500; cursor:pointer; border-radius:999px; transition:all .15s ease; }
+  .filters button.active{ background:var(--ink); color:var(--paper); }
+  .filters button:hover:not(.active){ background:rgba(14,26,43,.06); }
+
+  .list{ padding:16px 24px; display:flex; flex-direction:column; gap:12px; }
+  .empty{ text-align:center; padding:60px 20px; opacity:.5; font-size:14px; }
+
+  .card{ border:1.5px solid rgba(14,26,43,.15); padding:20px; background:var(--bone); display:grid; grid-template-columns:1fr auto; gap:16px; align-items:start; transition:border-color .15s ease; }
+  .card:hover{ border-color:var(--ink); }
+  .card .info h3{ font-size:17px; font-weight:600; letter-spacing:-.01em; }
+  .card .info .meta{ font-family:var(--mono); font-size:11px; opacity:.6; margin-top:4px; letter-spacing:.02em; }
+  .card .info .concept{ font-size:13px; margin-top:10px; opacity:.8; line-height:1.5; max-width:50ch; }
+  .card .info .tags{ display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+  .card .info .tag{ font-family:var(--mono); font-size:10px; padding:3px 8px; border:1px solid rgba(14,26,43,.2); border-radius:2px; }
+  .card .info .tag.status-pending{ border-color:var(--gold); color:var(--gold-deep); }
+  .card .info .tag.status-reviewed{ border-color:#3498db; color:#2980b9; }
+  .card .info .tag.status-shortlisted{ border-color:#27ae60; color:#27ae60; }
+  .card .info .tag.status-rejected{ border-color:#e74c3c; color:#c0392b; }
+
+  .card .actions{ display:flex; flex-direction:column; gap:8px; align-items:flex-end; }
+  .card .actions .dl{ display:inline-flex; align-items:center; gap:6px; padding:8px 14px; background:var(--ink); color:var(--paper); text-decoration:none; font-size:12px; font-weight:600; border-radius:999px; white-space:nowrap; }
+  .card .actions .dl:hover{ background:var(--gold-deep); }
+  .card .actions select{ padding:6px 10px; border:1px solid rgba(14,26,43,.3); background:var(--paper); font:inherit; font-size:11px; cursor:pointer; }
+
+  .card .notes-row{ grid-column:1/-1; display:flex; gap:8px; margin-top:4px; }
+  .card .notes-row input{ flex:1; padding:8px 12px; border:1px solid rgba(14,26,43,.15); background:transparent; font:inherit; font-size:12px; outline:none; }
+  .card .notes-row input:focus{ border-color:var(--gold-deep); }
+  .card .notes-row button{ padding:8px 14px; background:var(--ink); color:var(--paper); border:none; font:inherit; font-size:11px; font-weight:600; cursor:pointer; }
+</style>
+
+<div class="stats" id="stats">
+  <div class="stat"><div class="n" id="sTotal">—</div><div class="l">Total</div></div>
+  <div class="stat"><div class="n" id="sPending">—</div><div class="l">Pending</div></div>
+  <div class="stat"><div class="n" id="sShort">—</div><div class="l">Shortlisted</div></div>
+  <div class="stat"><div class="n" id="sReject">—</div><div class="l">Rejected</div></div>
+</div>
+
+<div class="filters">
+  <button class="active" data-filter="all">All</button>
+  <button data-filter="pending">Pending</button>
+  <button data-filter="reviewed">Reviewed</button>
+  <button data-filter="shortlisted">Shortlisted</button>
+  <button data-filter="rejected">Rejected</button>
+</div>
+
+<div class="list" id="list"></div>
+
+<script>
+let submissions = [];
+let currentFilter = 'all';
+
+async function loadSubmissions(){
+  const res = await fetch('/api/submissions');
+  if(res.status === 401){ window.location.reload(); return; }
+  submissions = await res.json();
+  updateStats();
+  render();
+}
+
+function updateStats(){
+  document.getElementById('count').textContent = submissions.length + ' entries';
+  document.getElementById('sTotal').textContent = submissions.length;
+  document.getElementById('sPending').textContent = submissions.filter(s=>s.status==='pending').length;
+  document.getElementById('sShort').textContent = submissions.filter(s=>s.status==='shortlisted').length;
+  document.getElementById('sReject').textContent = submissions.filter(s=>s.status==='rejected').length;
+}
+
+function render(){
+  const list = document.getElementById('list');
+  const filtered = currentFilter === 'all' ? submissions : submissions.filter(s=>s.status===currentFilter);
+
+  if(filtered.length === 0){
+    list.innerHTML = '<div class="empty">No submissions found.</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(s => {
+    const date = new Date(s.submittedAt).toLocaleDateString('en-MY', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    const sizeMB = (s.filesize/1024/1024).toFixed(1);
+    return `
+    <div class="card">
+      <div class="info">
+        <h3>${esc(s.name)}</h3>
+        <div class="meta">${esc(s.email)} · ${esc(s.phone)} · ${date}</div>
+        ${s.concept ? `<div class="concept">${esc(s.concept)}</div>` : ''}
+        <div class="tags">
+          <span class="tag status-${s.status}">${s.status.toUpperCase()}</span>
+          <span class="tag">${esc(s.experience || 'N/A')}</span>
+          <span class="tag">${sizeMB} MB</span>
+          ${s.portfolio ? `<a class="tag" href="${esc(s.portfolio)}" target="_blank" style="text-decoration:none;color:var(--gold-deep);">Portfolio ↗</a>` : ''}
+        </div>
+      </div>
+      <div class="actions">
+        <a class="dl" href="/api/submissions/${s.id}/pdf" target="_blank">↓ PDF</a>
+        <select onchange="updateStatus('${s.id}', this.value)">
+          <option value="pending" ${s.status==='pending'?'selected':''}>Pending</option>
+          <option value="reviewed" ${s.status==='reviewed'?'selected':''}>Reviewed</option>
+          <option value="shortlisted" ${s.status==='shortlisted'?'selected':''}>Shortlisted</option>
+          <option value="rejected" ${s.status==='rejected'?'selected':''}>Rejected</option>
+        </select>
+      </div>
+      <div class="notes-row">
+        <input type="text" placeholder="Add judge notes…" value="${esc(s.notes||'')}" id="notes-${s.id}" />
+        <button onclick="saveNotes('${s.id}')">Save</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function esc(str){ const d=document.createElement('div'); d.textContent=str; return d.innerHTML; }
+
+async function updateStatus(id, status){
+  await fetch(`/api/submissions/${id}`, {
+    method:'PATCH',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({status})
+  });
+  const s = submissions.find(x=>x.id===id);
+  if(s) s.status = status;
+  updateStats();
+  render();
+}
+
+async function saveNotes(id){
+  const notes = document.getElementById(`notes-${id}`).value;
+  await fetch(`/api/submissions/${id}`, {
+    method:'PATCH',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({notes})
+  });
+  const s = submissions.find(x=>x.id===id);
+  if(s) s.notes = notes;
+}
+
+async function logout(){
+  await fetch('/judge/logout', {method:'POST'});
+  window.location.reload();
+}
+
+// Filter buttons
+document.querySelectorAll('.filters button').forEach(btn => {
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    render();
+  });
+});
+
+loadSubmissions();
+</script>
+</body>
+</html>

@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Eternalgy 设计大赛 · Design Competition 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #0E1A2B;
+    --ink-2:#1c2a3d;
+    --paper:#F4EFE6;
+    --paper-2:#EBE4D6;
+    --bone:#FBF8F1;
+    --gold:#F2B23E;
+    --gold-deep:#D89320;
+    --rule: rgba(14,26,43,.16);
+    --rule-strong: rgba(14,26,43,.45);
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --display: 'Space Grotesk', 'Noto Sans SC', system-ui, sans-serif;
+    --cjk: 'Noto Sans SC', 'Space Grotesk', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{background:#0a0f17;}
+  body{
+    font-family: var(--cjk);
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.45;
+    font-weight:400;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+
+  .device{
+    max-width: 460px;
+    margin: 0 auto;
+    background: var(--paper);
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(0,0,0,.04);
+  }
+  .mono{ font-family: var(--mono); font-weight:500; letter-spacing:.02em; }
+  .uppercase{ text-transform:uppercase; letter-spacing:.08em; }
+  .rule{ height:1px; background:var(--rule); width:100%; }
+  .rule.strong{ background:var(--ink); height:1.5px; }
+
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 22px 14px;
+    position:sticky; top:0; z-index:30;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+  .topbar .mark{ display:flex; align-items:center; gap:10px; }
+  .topbar .mark img{ height:22px; width:auto; }
+  .topbar .meta{
+    font-family: var(--mono); font-size: 10.5px; letter-spacing:.08em; text-transform:uppercase; color: var(--ink); opacity:.7;
+  }
+  .topbar .dot{ width:6px; height:6px; border-radius:50%; background:var(--gold); display:inline-block; margin-right:6px; animation:pulse 2.2s infinite; vertical-align:middle; }
+  @keyframes pulse{
+    0%,100%{ box-shadow:0 0 0 0 rgba(242,178,62,.6); }
+    50%{ box-shadow:0 0 0 6px rgba(242,178,62,0); }
+  }
+
+  .hero{
+    position:relative; padding: 28px 22px 36px; border-bottom: 1px solid var(--rule); overflow:hidden;
+  }
+  .hero .eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-family: var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color: var(--ink); opacity:.72;
+  }
+  .hero .eyebrow .num{ background:var(--ink); color:var(--paper); padding: 2px 7px; border-radius:2px; font-weight:600; }
+  .hero h1{
+    font-family: var(--display); font-weight:700; font-size: clamp(56px, 16vw, 78px); line-height: .92; letter-spacing:-.04em; margin-top: 18px; color: var(--ink);
+  }
+  .hero h1 .it{ font-style:italic; font-weight:500; }
+  .hero h1 .gold{ color: var(--gold-deep); }
+  .hero .ch-title{ font-family: var(--cjk); font-weight:900; font-size: 26px; letter-spacing:.04em; margin-top: 14px; color: var(--ink); }
+  .hero .ch-title span{ color: var(--gold-deep); }
+  .hero .sub{ font-size: 14.5px; line-height:1.55; margin-top: 18px; max-width: 34ch; color: var(--ink-2); }
+  .hero-meta{ display:grid; grid-template-columns: 1fr 1fr; gap:0; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); margin-top: 26px; }
+  .hero-meta > div{ padding: 14px 0; }
+  .hero-meta > div + div{ border-left:1px solid var(--rule); padding-left:14px; }
+  .hero-meta .label{ font-family: var(--mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; opacity:.55; }
+  .hero-meta .val{ font-family: var(--display); font-weight:600; font-size:18px; margin-top:6px; letter-spacing:-.01em; }
+  .ee-mark{ position:absolute; right: -40px; top: 70px; width: 220px; opacity:.08; pointer-events:none; }
+  .cta-row{ display:flex; gap:10px; margin-top:22px; }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding: 14px 18px; border-radius: 999px; font-family: var(--display); font-weight:600; font-size: 14px; text-decoration:none; border: 1.5px solid var(--ink); cursor:pointer; transition: transform .15s ease;
+  }
+  .btn:active{ transform:translateY(1px); }
+  .btn.primary{ background: var(--ink); color: var(--paper); flex:1; }
+  .btn.ghost{ background: transparent; color: var(--ink); }
+  .btn .arr{ display:inline-block; transition: transform .2s ease; }
+  .btn:hover .arr{ transform: translateX(3px); }
+
+  section.block{ padding: 40px 22px; border-bottom: 1px solid var(--rule); position: relative; }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom: 22px; }
+  .section-head .idx{ font-family: var(--mono); font-size: 11px; letter-spacing:.1em; text-transform:uppercase; opacity:.5; }
+  .section-head .name{ font-family: var(--mono); font-size: 11px; letter-spacing:.18em; text-transform:uppercase; color: var(--ink); }
+
+  .brief .kicker{ font-family: var(--display); font-size: 11px; letter-spacing:.18em; text-transform:uppercase; color: var(--gold-deep); font-weight:600; }
+  .brief h2{ font-family: var(--display); font-size: 44px; line-height:.95; letter-spacing:-.035em; font-weight:700; margin-top: 10px; color: var(--ink); }
+  .brief h2 em{ font-style:italic; font-weight:500; color: var(--gold-deep); }
+  .brief .ch{ margin-top: 16px; font-size: 16px; line-height: 1.6; color: var(--ink-2); max-width: 36ch; }
+  .brief .doc-card{
+    margin-top: 22px; background: var(--bone); border:1.5px solid var(--ink); padding: 16px; display:flex; gap:14px; align-items:center; border-radius: 4px; text-decoration:none; color: var(--ink); transition: background .15s ease, transform .15s ease; position: relative;
+  }
+  .brief .doc-card:hover{ background: var(--ink); color: var(--paper); }
+  .brief .doc-card:hover .doc-thumb{ background: var(--gold); color: var(--ink); }
+  .brief .doc-card:hover .doc-thumb::after{ border-color: transparent var(--ink) transparent transparent; }
+  .brief .doc-card:hover .dl-cta{ background: var(--gold); color: var(--ink); border-color: var(--gold); }
+  .brief .doc-card:hover .doc-info .meta{ opacity:.75; }
+  .brief .doc-card:active{ transform: translateY(1px); }
+  .brief .doc-info{ flex:1; min-width:0; }
+  .brief .dl-cta{
+    flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid currentColor; background: transparent; transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .brief .dl-cta svg{ width: 16px; height: 16px; }
+  .brief .doc-thumb{
+    width: 56px; height: 72px; background: var(--ink); color: var(--paper); display:flex; flex-direction:column; justify-content:space-between; padding: 6px 8px; flex-shrink:0; position:relative;
+  }
+  .brief .doc-thumb::after{ content:''; position:absolute; right:-1px; top:-1px; border-style: solid; border-width: 0 10px 10px 0; border-color: transparent var(--paper) transparent transparent; }
+  .brief .doc-thumb .t{ font-family: var(--mono); font-size:7px; letter-spacing:.1em; opacity:.7;}
+  .brief .doc-thumb .b{ font-family: var(--display); font-weight:700; font-size:18px; letter-spacing:-.02em; }
+  .brief .doc-info .ttl{ font-family: var(--display); font-weight:600; font-size:15px; }
+  .brief .doc-info .meta{ font-family: var(--mono); font-size:10px; opacity:.6; margin-top:4px; letter-spacing:.06em;}
+
+  .rules-list{ display:flex; flex-direction:column; }
+  .rule-item{ display:grid; grid-template-columns: 36px 1fr; gap: 14px; padding: 18px 0; border-top: 1px solid var(--rule); align-items:start; }
+  .rule-item:last-child{ border-bottom: 1px solid var(--rule); }
+  .rule-num{ font-family: var(--mono); font-size: 11px; letter-spacing:.04em; color: var(--gold-deep); font-weight:500; padding-top: 3px; }
+  .rule-text{ font-size: 15px; line-height: 1.55; color: var(--ink-2); }
+  .rule-text strong{ color: var(--ink); font-weight:600; }
+  .rule-text .pill{ display:inline-block; padding:2px 8px; background: var(--ink); color: var(--paper); font-family: var(--mono); font-size:11px; letter-spacing:.04em; border-radius: 2px; margin: 0 2px; }
+  .rule-text .pill.gold{ background: var(--gold); color: var(--ink); }
+
+  .deadline{ background: var(--ink); color: var(--paper); padding: 36px 22px 40px; border-bottom: 1px solid var(--rule); position: relative; overflow: hidden; }
+  .deadline .kicker{ font-family: var(--mono); font-size: 11px; letter-spacing:.18em; text-transform:uppercase; color: var(--gold); }
+  .deadline .date{ font-family: var(--display); font-weight: 700; font-size: clamp(72px, 22vw, 104px); line-height: .9; letter-spacing:-.04em; margin-top: 12px; }
+  .deadline .date sup{ font-size: .4em; font-weight: 500; vertical-align: top; margin-left: 6px; color: var(--gold); font-family: var(--mono); }
+  .deadline .sub{ margin-top: 14px; font-size: 14px; opacity:.75; max-width: 30ch; }
+  .deadline .countdown{ display:flex; gap: 8px; margin-top: 22px; border-top: 1px solid rgba(255,255,255,.15); padding-top: 18px; }
+  .cd{ flex:1; }
+  .cd .n{ font-family: var(--display); font-weight:600; font-size: 28px; letter-spacing:-.02em; color: var(--gold); }
+  .cd .l{ font-family: var(--mono); font-size: 9px; letter-spacing:.14em; text-transform:uppercase; opacity:.6; margin-top:2px; }
+  .deadline .bg-ee{ position:absolute; right:-60px; bottom:-60px; width: 280px; opacity:.06; pointer-events:none; }
+
+  .prize-grid{ display:flex; flex-direction:column; gap: 14px; }
+  .prize{ border: 1.5px solid var(--ink); padding: 22px 20px 24px; position: relative; background: var(--bone); }
+  .prize.top{ background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .prize .badge{ display:inline-flex; align-items:center; gap:6px; font-family: var(--mono); font-size: 10px; letter-spacing:.14em; text-transform:uppercase; padding: 5px 9px; border:1px solid currentColor; border-radius: 999px; opacity:.85; }
+  .prize.top .badge{ background: var(--gold); color: var(--ink); border-color: var(--gold); opacity:1; }
+  .prize .title{ font-family: var(--display); font-weight: 700; font-size: 30px; line-height: 1; letter-spacing:-.02em; margin-top: 14px; }
+  .prize.top .title em{ color: var(--gold); font-style: italic; font-weight: 500; }
+  .prize .ch-sub{ font-family: var(--cjk); font-size: 13px; opacity:.7; margin-top: 4px; }
+  .prize .items{ margin-top: 18px; display:flex; flex-direction:column; }
+  .prize .pi{ display:grid; grid-template-columns: 18px 1fr auto; align-items: baseline; gap: 10px; padding: 12px 0; border-top: 1px dashed currentColor; opacity: .98; }
+  .prize .pi:last-child{ border-bottom: 1px dashed currentColor; }
+  .prize.top .pi{ border-color: rgba(255,255,255,.2); }
+  .prize .pi .ix{ font-family: var(--mono); font-size: 10px; opacity:.6; }
+  .prize .pi .label{ font-size: 14px; line-height:1.35; }
+  .prize .pi .label small{ display:block; font-family: var(--mono); font-size: 10px; opacity:.55; margin-top:3px; letter-spacing:.04em; }
+  .prize .pi .amt{ font-family: var(--display); font-weight: 600; font-size: 16px; letter-spacing:-.01em; white-space: nowrap; }
+  .prize.top .pi .amt{ color: var(--gold); }
+
+  .location{ padding: 32px 22px; border-bottom: 1px solid var(--rule); display:flex; gap:16px; align-items:center; background: var(--paper-2); }
+  .location .pin{ width: 44px; height: 44px; border:1.5px solid var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .location .pin::after{ content:''; width:8px; height:8px; background: var(--gold); border-radius:50%; box-shadow: 0 0 0 4px rgba(242,178,62,.3); }
+  .location .label{ font-family: var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; opacity:.6; }
+  .location .place{ font-family: var(--display); font-weight:600; font-size:18px; margin-top:3px; letter-spacing:-.01em; }
+  .location .note{ font-size: 12px; opacity:.6; margin-top:3px; }
+
+  .form-wrap{ padding: 40px 22px 32px; background: var(--bone); border-bottom: 1px solid var(--rule); }
+  .form-wrap h3{ font-family: var(--display); font-weight:700; font-size: 36px; line-height:1; letter-spacing:-.03em; }
+  .form-wrap h3 em{ font-style: italic; font-weight: 500; color: var(--gold-deep); }
+  .form-wrap .ch-h{ font-family: var(--cjk); font-weight:700; font-size:18px; margin-top:8px; }
+  .form-wrap .lead{ font-size: 13.5px; color: var(--ink-2); margin-top:10px; max-width: 34ch; }
+  form{ margin-top: 26px; display:flex; flex-direction:column; gap: 18px; }
+  .field{ display:flex; flex-direction:column; }
+  .field label{ font-family: var(--mono); font-size: 10px; letter-spacing:.14em; text-transform:uppercase; color: var(--ink); opacity:.75; display:flex; justify-content:space-between; align-items:center; }
+  .field label .req{ color: var(--gold-deep); }
+  .field input, .field textarea, .field select{
+    margin-top: 8px; background: transparent; border: none; border-bottom: 1.5px solid var(--ink); padding: 10px 0 10px; font: inherit; color: var(--ink); font-size: 15px; outline: none; transition: border-color .15s ease; border-radius: 0; font-family: var(--cjk);
+  }
+  .field input::placeholder, .field textarea::placeholder{ color: rgba(14,26,43,.35); }
+  .field input:focus, .field textarea:focus, .field select:focus{ border-color: var(--gold-deep); }
+  .field textarea{ min-height: 80px; resize:vertical; border:1.5px solid var(--ink); padding: 12px; }
+  .file-field{ display:flex; align-items:center; justify-content:space-between; margin-top:8px; border: 1.5px dashed var(--ink); padding: 16px 14px; background: var(--paper); cursor: pointer; }
+  .file-field .lhs{ display:flex; align-items:center; gap:12px; }
+  .file-field .ico{ width:36px; height:36px; border:1.5px solid var(--ink); display:flex; align-items:center; justify-content:center; font-family: var(--mono); font-size: 10px; letter-spacing:.04em; font-weight:600; }
+  .file-field .ft{ font-family: var(--display); font-weight:600; font-size: 14px; }
+  .file-field .fm{ font-family: var(--mono); font-size: 10px; opacity:.55; letter-spacing:.06em; margin-top:2px;}
+  .file-field .browse{ font-family: var(--mono); font-size: 10px; letter-spacing:.12em; text-transform:uppercase; border:1.5px solid var(--ink); padding: 6px 10px; background: var(--ink); color: var(--paper); }
+  .file-field input[type=file]{ display:none; }
+  .file-field.has-file{ border-style: solid; background: rgba(242,178,62,.12); border-color: var(--gold-deep); }
+  .file-field.has-file .ico{ background: var(--gold); border-color: var(--gold); }
+  .agree{ display:flex; gap:12px; align-items:flex-start; font-size: 12.5px; color: var(--ink-2); line-height:1.45; }
+  .agree input{ width:18px; height:18px; appearance:none; border:1.5px solid var(--ink); background: var(--paper); margin-top: 2px; flex-shrink:0; cursor:pointer; position:relative; }
+  .agree input:checked{ background: var(--ink); }
+  .agree input:checked::after{ content:'✓'; color: var(--gold); font-size: 13px; font-weight:700; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+  .submit-btn{ margin-top: 8px; width: 100%; padding: 18px; background: var(--ink); color: var(--paper); border:none; border-radius: 999px; font-family: var(--display); font-weight:700; font-size: 15px; letter-spacing:.02em; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; transition: transform .15s ease, background .15s ease; }
+  .submit-btn:hover{ background: var(--gold-deep); }
+  .submit-btn:active{ transform: translateY(1px); }
+  .submit-btn:disabled{ opacity:.7; cursor:not-allowed; }
+  .submit-btn .arr{ transition: transform .2s ease; }
+  .submit-btn:hover .arr{ transform: translateX(4px); }
+
+  footer{ padding: 36px 22px 90px; background: var(--ink); color: var(--paper); }
+  footer img{ height: 26px; width:auto; }
+  footer .line{ height:1px; background: rgba(255,255,255,.16); margin: 22px 0; }
+  footer .row{ display:flex; justify-content:space-between; gap:20px; font-family: var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; opacity:.7;}
+  footer .cs{ font-size: 12px; margin-top: 12px; opacity:.55; line-height:1.5;}
+  .sticky-cta{ position: sticky; bottom: 0; background: var(--paper); border-top: 1px solid var(--rule); padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0)); display:flex; gap:10px; align-items:center; z-index: 20; max-width: 460px; margin: 0 auto; }
+  .sticky-cta .lhs{ flex:1; }
+  .sticky-cta .lhs .a{ font-family: var(--mono); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; opacity:.6; }
+  .sticky-cta .lhs .b{ font-family: var(--display); font-weight:600; font-size:14px; margin-top:2px;}
+  .sticky-cta .go{ background: var(--ink); color:var(--paper); padding: 12px 18px; border-radius: 999px; text-decoration:none; font-family: var(--display); font-weight:600; font-size:13px; display:inline-flex; align-items:center; gap:8px; }
+  .marquee{ overflow:hidden; background: var(--gold); border-top: 1.5px solid var(--ink); border-bottom: 1.5px solid var(--ink); padding: 12px 0; color: var(--ink); }
+  .marquee .track{ display: inline-flex; white-space: nowrap; animation: scroll 22s linear infinite; font-family: var(--display); font-weight:700; font-size: 22px; letter-spacing:-.01em; }
+  .marquee .track span{ padding: 0 14px; display:inline-flex; align-items:center; gap:14px; }
+  .marquee .star{ display:inline-block; transform: translateY(-1px); }
+  @keyframes scroll{ from{ transform: translateX(0); } to{ transform: translateX(-50%); } }
+
+  /* Toast notification */
+  .toast{ position:fixed; top:20px; left:50%; transform:translateX(-50%); background:var(--ink); color:var(--paper); padding:14px 24px; border-radius:999px; font-family:var(--display); font-size:14px; font-weight:600; z-index:9999; opacity:0; transition:opacity .3s ease; pointer-events:none; }
+  .toast.show{ opacity:1; }
+  .toast.error{ background:#c0392b; }
+  .toast.success{ background:var(--gold-deep); color:var(--ink); }
+</style>
+</head>
+<body>
+<div id="toast" class="toast"></div>
+<div class="device">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="mark">
+      <img src="/assets/eternalgy-logo-dark.png" alt="Eternalgy" />
+    </div>
+    <div class="meta"><span class="dot"></span>OPEN · 2026</div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <svg class="ee-mark" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M50 50a25 25 0 1 1 50 0M150 50a25 25 0 1 0-50 0M25 50h50M125 50h50" stroke="currentColor" stroke-width="14" stroke-linecap="square"/>
+    </svg>
+    <div class="eyebrow"><span class="num">01</span><span>Open Call · Design Talent</span></div>
+    <h1>Design<br><span class="it">Competition</span><br><span class="gold">2026.</span></h1>
+    <div class="ch-title">ETERNALGY <span>设计大赛</span></div>
+    <p class="sub">欢迎任何有兴趣加入 Eternalgy 的设计人才参与。重新构想我们的 Company Profile，赢取奖金与一份正式的工作邀约。</p>
+    <div class="hero-meta">
+      <div><div class="label">Brief</div><div class="val">Company Profile</div></div>
+      <div><div class="label">Deadline</div><div class="val">30·06·2026</div></div>
+    </div>
+    <div class="cta-row">
+      <a class="btn primary" href="#submit">参赛 / Enter <span class="arr">→</span></a>
+      <a class="btn ghost" href="/download/profile">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M12 4v12"/><path d="M6 11l6 6 6-6"/><path d="M5 20h14"/></svg>
+        Profile.pdf
+      </a>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="track">
+      <span>REDESIGN OUR COMPANY PROFILE <span class="star">✦</span></span>
+      <span>RM 3,888 + JOB OFFER <span class="star">✦</span></span>
+      <span>截止 30 / 06 / 2026 <span class="star">✦</span></span>
+      <span>JOHOR BAHRU <span class="star">✦</span></span>
+      <span>REDESIGN OUR COMPANY PROFILE <span class="star">✦</span></span>
+      <span>RM 3,888 + JOB OFFER <span class="star">✦</span></span>
+      <span>截止 30 / 06 / 2026 <span class="star">✦</span></span>
+      <span>JOHOR BAHRU <span class="star">✦</span></span>
+    </div>
+  </div>
+
+  <!-- BRIEF -->
+  <section class="block brief" id="brief">
+    <div class="section-head"><span class="idx">02 / Brief</span><span class="name">The Challenge</span></div>
+    <div class="kicker">The Challenge</div>
+    <h2>Redesign our <em>company profile.</em></h2>
+    <p class="ch">请以 <strong style="color:var(--ink);font-weight:600">Eternalgy Company Profile 2025</strong> 为蓝本，提交你的修改版本。展示你对品牌、版式、视觉系统与叙事的理解，让我们看见你如何讲述 Eternalgy 的故事。</p>
+    <a class="doc-card" href="/download/source" aria-label="Download source files">
+      <div class="doc-thumb"><div class="t">REF</div><div class="b">CP'25</div></div>
+      <div class="doc-info">
+        <div class="ttl">Download source files</div>
+        <div class="meta">Company Profile 2025 + extracted images · ZIP</div>
+      </div>
+      <span class="dl-cta" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"><path d="M12 4v12"/><path d="M6 11l6 6 6-6"/><path d="M5 20h14"/></svg>
+      </span>
+    </a>
+  </section>
+
+  <!-- RULES -->
+  <section class="block">
+    <div class="section-head"><span class="idx">03 / How to enter</span><span class="name">参赛规则</span></div>
+    <div class="rules-list">
+      <div class="rule-item"><div class="rule-num">01</div><div class="rule-text">参赛者最少提交 <span class="pill gold">5 页</span> 修改后的作品 — 涵盖封面、品牌叙事与关键内容页。</div></div>
+      <div class="rule-item"><div class="rule-num">02</div><div class="rule-text">请把你的作品 <strong>收集为 1 份 PDF</strong>，文件大小建议在 25MB 以内。</div></div>
+      <div class="rule-item"><div class="rule-num">03</div><div class="rule-text">在下方表格 <strong>提交你的作品与联络方式</strong>，我们会在 3 个工作天内回复确认。</div></div>
+      <div class="rule-item"><div class="rule-num">04</div><div class="rule-text">截止日期 <span class="pill">30 / 06 / 2026</span> — 逾期作品恕不接受。</div></div>
+      <div class="rule-item"><div class="rule-num">05</div><div class="rule-text">如被入取，工作地点为 <strong>Taman Mount Austin, Johor Bahru</strong>。</div></div>
+    </div>
+  </section>
+
+  <!-- DEADLINE -->
+  <section class="deadline">
+    <svg class="bg-ee" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 50a25 25 0 1 1 50 0M150 50a25 25 0 1 0-50 0M25 50h50M125 50h50" stroke="currentColor" stroke-width="14" stroke-linecap="square"/></svg>
+    <div class="kicker">Submission Closes</div>
+    <div class="date">30·06<sup>2026</sup></div>
+    <p class="sub">作品须于 2026 年 6 月 30 日(马来西亚时间 23:59)前提交。</p>
+    <div class="countdown" id="cd">
+      <div class="cd"><div class="n" id="cdD">—</div><div class="l">Days</div></div>
+      <div class="cd"><div class="n" id="cdH">—</div><div class="l">Hours</div></div>
+      <div class="cd"><div class="n" id="cdM">—</div><div class="l">Minutes</div></div>
+      <div class="cd"><div class="n" id="cdS">—</div><div class="l">Seconds</div></div>
+    </div>
+  </section>
+
+  <!-- PRIZES -->
+  <section class="block">
+    <div class="section-head"><span class="idx">05 / Prizes</span><span class="name">奖品</span></div>
+    <div class="prize-grid">
+      <div class="prize top">
+        <span class="badge">★ Grand Prize · 榜首</span>
+        <div class="title">First <em>Place.</em></div>
+        <div class="ch-sub">总价值超过 RM 3,888 + 工作机会</div>
+        <div class="items">
+          <div class="pi"><div class="ix">01</div><div class="label">现金奖金<small>Cash Prize</small></div><div class="amt">RM 1,000</div></div>
+          <div class="pi"><div class="ix">02</div><div class="label">Eternalgy Solar Voucher<small>可转让 · Transferable</small></div><div class="amt">RM 2,888</div></div>
+          <div class="pi"><div class="ix">03</div><div class="label">Job Offer<small>正式工作邀约 · From Eternalgy</small></div><div class="amt">✶</div></div>
+        </div>
+      </div>
+      <div class="prize">
+        <span class="badge">Consolation · 安慰奖</span>
+        <div class="title">Consolation.</div>
+        <div class="ch-sub">每位优秀参赛者</div>
+        <div class="items">
+          <div class="pi"><div class="ix">01</div><div class="label">Eternalgy Solar Voucher<small>可转让 · Transferable</small></div><div class="amt">RM 888</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATION -->
+  <div class="location">
+    <div class="pin"></div>
+    <div>
+      <div class="label">Workplace</div>
+      <div class="place">Taman Mount Austin</div>
+      <div class="note">Johor Bahru, Malaysia · 如被入取的工作地点</div>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <section class="form-wrap" id="submit">
+    <div class="section-head"><span class="idx">07 / Submit</span><span class="name">参赛表格</span></div>
+    <h3>Submit your <em>entry.</em></h3>
+    <div class="ch-h">填写资料 · 上传 PDF</div>
+    <p class="lead">完成以下表格并上传你的 PDF 作品。提交后我们将以电邮回覆确认。</p>
+
+    <form id="entryForm">
+      <div class="field"><label>Full Name · 姓名 <span class="req">*</span></label><input type="text" name="name" required placeholder="Your full name / 你的姓名" /></div>
+      <div class="field"><label>Email · 电邮 <span class="req">*</span></label><input type="email" name="email" required placeholder="you@example.com" /></div>
+      <div class="field"><label>Phone · 联络号码 <span class="req">*</span></label><input type="tel" name="phone" required placeholder="+60 12 345 6789" /></div>
+      <div class="field"><label>Portfolio · 作品集链接</label><input type="url" name="portfolio" placeholder="https://" /></div>
+      <div class="field"><label>Years of design experience · 设计经验</label>
+        <select name="experience"><option>0 – 1 年</option><option>2 – 3 年</option><option>4 – 6 年</option><option>7 年以上</option></select>
+      </div>
+      <div class="field"><label>Tell us about your concept · 设计理念</label><textarea name="concept" placeholder="简述你的设计方向、灵感来源…"></textarea></div>
+      <div class="field">
+        <label>Upload PDF · 上传作品 <span class="req">*</span></label>
+        <label class="file-field" id="fileField">
+          <div class="lhs">
+            <div class="ico">PDF</div>
+            <div><div class="ft" id="fName">Drop your PDF here</div><div class="fm" id="fMeta">最大 25MB · 最少 5 页</div></div>
+          </div>
+          <span class="browse">Browse</span>
+          <input type="file" accept="application/pdf" id="fileIn" name="pdf" required />
+        </label>
+      </div>
+      <label class="agree"><input type="checkbox" required /><span>我确认所提交的作品为原创，并同意 Eternalgy 在比赛宣传中使用我的作品。<br><span style="opacity:.6">I confirm this submission is my original work.</span></span></label>
+      <button type="submit" class="submit-btn" id="submitBtn">提交参赛作品 · Submit entry <span class="arr">→</span></button>
+    </form>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <img src="/assets/eternalgy-logo-light.png" alt="Eternalgy" style="filter: brightness(0) invert(1); opacity:.95;"/>
+    <div class="line"></div>
+    <div class="row"><div>Eternal Energy</div><div>Est. JB</div></div>
+    <div class="cs">© 2026 Eternalgy Sdn Bhd · 设计大赛 Design Competition · 如有疑问请联系 hr@eternalgy.com</div>
+  </footer>
+
+  <!-- STICKY CTA -->
+  <div class="sticky-cta">
+    <div class="lhs"><div class="a">Deadline · 截止</div><div class="b">30 June 2026</div></div>
+    <a class="go" href="#submit">立即参赛 <span>→</span></a>
+  </div>
+</div>
+
+<script>
+  // Countdown
+  const deadline = new Date('2026-06-30T23:59:00+08:00').getTime();
+  function tick(){
+    const now = Date.now();
+    let diff = Math.max(0, deadline - now);
+    const d = Math.floor(diff / 86400000); diff -= d*86400000;
+    const h = Math.floor(diff / 3600000); diff -= h*3600000;
+    const m = Math.floor(diff / 60000); diff -= m*60000;
+    const s = Math.floor(diff / 1000);
+    document.getElementById('cdD').textContent = String(d).padStart(2,'0');
+    document.getElementById('cdH').textContent = String(h).padStart(2,'0');
+    document.getElementById('cdM').textContent = String(m).padStart(2,'0');
+    document.getElementById('cdS').textContent = String(s).padStart(2,'0');
+  }
+  tick(); setInterval(tick, 1000);
+
+  // File UI
+  const fileIn = document.getElementById('fileIn');
+  const fField = document.getElementById('fileField');
+  const fName = document.getElementById('fName');
+  const fMeta = document.getElementById('fMeta');
+  fileIn.addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0];
+    if(!f) return;
+    fName.textContent = f.name;
+    fMeta.textContent = `${(f.size/1024/1024).toFixed(1)} MB · 准备上传`;
+    fField.classList.add('has-file');
+  });
+
+  // Toast
+  function showToast(msg, type=''){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + type;
+    setTimeout(()=> t.className = 'toast', 3500);
+  }
+
+  // Form submit
+  document.getElementById('entryForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '上传中… Uploading…';
+
+    const form = new FormData(e.target);
+    try {
+      const res = await fetch('/api/submit', { method: 'POST', body: form });
+      const data = await res.json();
+      if(res.ok && data.success){
+        showToast('✓ 已提交成功 · Submission received!', 'success');
+        btn.innerHTML = '✓ 已提交 · Submitted';
+        btn.style.background = 'var(--gold-deep)';
+      } else {
+        throw new Error(data.error || 'Submission failed');
+      }
+    } catch(err){
+      showToast(err.message || 'Error submitting. Please try again.', 'error');
+      btn.disabled = false;
+      btn.innerHTML = '提交参赛作品 · Submit entry <span class="arr">→</span>';
+    }
+  });
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    });
+  });
+</script>
+</body>
+</html>

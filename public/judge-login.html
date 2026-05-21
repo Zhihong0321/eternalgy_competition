@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Judge Login · Eternalgy Design Competition</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#0E1A2B; --paper:#F4EFE6; --gold:#F2B23E; --gold-deep:#D89320; --mono:'JetBrains Mono',monospace; --display:'Space Grotesk','Noto Sans SC',sans-serif; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{ font-family:var(--display); background:var(--ink); color:var(--paper); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+  .card{ background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); padding:48px 36px; max-width:380px; width:100%; text-align:center; }
+  .card h1{ font-size:28px; font-weight:700; letter-spacing:-.02em; margin-bottom:8px; }
+  .card p{ font-size:13px; opacity:.6; margin-bottom:32px; font-family:var(--mono); letter-spacing:.04em; }
+  .card input{ width:100%; padding:14px 16px; background:transparent; border:1.5px solid rgba(255,255,255,.2); color:var(--paper); font:inherit; font-size:15px; outline:none; text-align:center; letter-spacing:.1em; }
+  .card input:focus{ border-color:var(--gold); }
+  .card input::placeholder{ color:rgba(255,255,255,.3); }
+  .card button{ margin-top:16px; width:100%; padding:16px; background:var(--gold-deep); color:var(--ink); border:none; font:inherit; font-weight:700; font-size:15px; cursor:pointer; border-radius:999px; transition:transform .15s ease; }
+  .card button:hover{ transform:translateY(-1px); }
+  .card button:active{ transform:translateY(1px); }
+  .err{ color:#e74c3c; font-size:12px; margin-top:12px; min-height:18px; font-family:var(--mono); }
+  .logo{ margin-bottom:24px; opacity:.8; }
+</style>
+</head>
+<body>
+<div class="card">
+  <img class="logo" src="/assets/eternalgy-logo-light.png" alt="Eternalgy" height="28" style="filter:brightness(0) invert(1);"/>
+  <h1>Judge Panel</h1>
+  <p>DESIGN COMPETITION 2026</p>
+  <form id="loginForm">
+    <input type="password" id="pw" placeholder="Enter password" autofocus required />
+    <button type="submit">Enter →</button>
+    <div class="err" id="err"></div>
+  </form>
+</div>
+<script>
+document.getElementById('loginForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const pw = document.getElementById('pw').value;
+  const res = await fetch('/judge/login', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({password:pw})
+  });
+  if(res.ok) window.location.reload();
+  else document.getElementById('err').textContent = 'Invalid password';
+});
+</script>
+</body>
+</html>

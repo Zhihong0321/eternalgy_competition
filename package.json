@@ -1,0 +1,16 @@
+{
+  "name": "eternalgy-design-competition",
+  "version": "1.0.0",
+  "description": "Eternalgy Design Competition 2026 - Submission & Judging Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "multer": "^1.4.5-lts.1",
+    "express-session": "^1.18.0",
+    "uuid": "^10.0.0"
+  }
+}
